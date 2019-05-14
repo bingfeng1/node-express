@@ -1,0 +1,22 @@
+{
+  "name": "meadowlark",
+  "version": "1.0.0",
+  "description": "练习node+express搭建服务器。根据node与express开发这本书。",
+  "main": "meadowlark.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bingfeng1/node-express.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bingfeng1/node-express/issues"
+  },
+  "homepage": "https://github.com/bingfeng1/node-express#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
