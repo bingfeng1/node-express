@@ -6,3 +6,6 @@ npm init -y
 设置启动名称meadowlark.js
 通过.gitignore忽略不需要上传的内容
 
+# meadowlark.js
+入口文件
+设置404和500页面
