@@ -8,6 +8,19 @@ if (process.env.NODE_ENV === "production") {
     app.enable('view cache');
 }
 
+let tours = [
+    {
+        id: 0,
+        name: 'Hood River',
+        price: 99.99
+    },
+    {
+        id: 1,
+        name: 'Oregon Coast',
+        price: 149.95
+    }
+]
+
 app.set('port', process.env.PORT || 3000)
     .engine('handlebars', exphbs({ defaultLayout: 'main' }))
     .set('view engine', 'handlebars')
@@ -15,6 +28,7 @@ app.set('port', process.env.PORT || 3000)
     .use(express.json())
     // .disable('x-powered-by')
 
+    // 路由
     .get('/', (req, res) => {
         res.render('home')
     })
@@ -32,7 +46,47 @@ app.set('port', process.env.PORT || 3000)
         })
     })
 
-    .get('/no-layout', (req, res) => {
+    //!!!!!!!!!!!json操作!!!!!!!!!!!
+    // 传递json数据
+    .get('/api/tours',(req,res)=>{
+        res.json(tours)
+        
+    })
+
+    .route('/api/tours/:id')
+    .get((req, res) => {
+        let p = tours.filter(p => p.id == req.params.id)
+        res.json(p)
+    })
+
+    //修改数组
+    .put((req, res) => {
+        let p = tours.filter(p => p.id == req.params.id)
+        if (p[0]) {
+            if (req.query.name)
+                p[0].name = req.query.name;
+            if (req.query.price)
+                p[0].price = req.query.price;
+            res.json({ success: true });
+        } else {
+            res.json({ error: 'No such tour exists.' })
+        }
+    })
+
+    // 删除数组
+    .delete((req, res) => {
+        let p = tours.filter(p => p.id == req.params.id)
+        if (p[0]) {
+            tours.splice(tours.indexOf(p[0]), 1);
+            res.json(tours);
+        } else {
+            res.json({ error: 'No such tour exists.' })
+        }
+    })
+
+    //!!!!!!!!!!!json操作!!!!!!!!!!!
+
+    app.get('/no-layout', (req, res) => {
         res.render('no-layout', { layout: null })
     })
 
