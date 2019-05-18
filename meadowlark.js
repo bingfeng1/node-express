@@ -86,7 +86,29 @@ app.set('port', process.env.PORT || 3000)
 
     //!!!!!!!!!!!json操作!!!!!!!!!!!
 
-    app.get('/no-layout', (req, res) => {
+    // handlebars测试练习（如果前后端分离，这个并没有必要学习）
+    app.get('/sendData',(req,res)=>{
+        let temp = {
+            currency:{
+                name:'United States dollars',
+                abbrev:'USD'
+            },
+            tours:[
+                {
+                    name:'Hood River',
+                    price:'$99.95'
+                },{
+                    name:'Oregon Coast',
+                    price:'$159.95'
+                }
+            ],
+            specialsUrl:'/january-specials',
+            currencies:['USD','GBP','BTC']
+        }
+        res.render('sendData',temp)
+    })
+
+    .get('/no-layout', (req, res) => {
         res.render('no-layout', { layout: null })
     })
 
