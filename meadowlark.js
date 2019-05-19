@@ -26,6 +26,8 @@ app.set('port', process.env.PORT || 3000)
     .set('view engine', 'handlebars')
     .use(express.static(__dirname + '/public'))
     .use(express.json())
+    //仅上面的express.json只将req.body创建，内部没有内容，需要使用urlencoded加载传输来的数据
+    .use(express.urlencoded())
     // .disable('x-powered-by')
 
     // 路由
@@ -44,6 +46,15 @@ app.set('port', process.env.PORT || 3000)
             userid: req.cookies.userid,
             username: req.session.username,
         })
+    })
+
+    .get('/newsletter',(req,res)=>{
+        res.render('newsletter',{csrf:"测试模拟数据"});
+    })
+
+    .post('/process',(req,res)=>{
+        console.log(req.query.form,req.body._csrf,req.body.name,req.body.email);
+        res.redirect(303,'/')
     })
 
     //!!!!!!!!!!!json操作!!!!!!!!!!!
@@ -86,7 +97,7 @@ app.set('port', process.env.PORT || 3000)
 
     //!!!!!!!!!!!json操作!!!!!!!!!!!
 
-    // handlebars测试练习（如果前后端分离，这个并没有必要学习）
+    // handlebars测试练习（如果前后端分离，这个并没有必要学习），后面涉及前后端交互，以jquery为主
     app.get('/sendData',(req,res)=>{
         let temp = {
             currency:{
