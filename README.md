@@ -38,3 +38,6 @@ const upload = multer({dest:'uploads/'});
         res.redirect(303,'/');
     })
 ```
+
+# credentials.js
+用于保存cookie密钥，正式开发，这个需要gitignore。测试不需要

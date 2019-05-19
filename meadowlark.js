@@ -4,6 +4,9 @@ const exphbs = require('express-handlebars');
 const multer = require('multer');
 // 加入dest，那么会存在硬盘上butter，如果不带参数，则在内存中，file对象会增加butter属性：http://www.expressjs.com.cn/en/resources/middleware/multer.html
 const upload = multer({dest:'uploads/'})
+// 设置cookies
+const credentials = require('./credentials');
+const cookieParse = require('cookie-parser');
 
 const app = express();
 
@@ -33,9 +36,20 @@ app.set('port', process.env.PORT || 3000)
     //仅上面的express.json只将req.body创建，内部没有内容，需要使用urlencoded加载传输来的数据
     .use(express.urlencoded())
     // .disable('x-powered-by')
+    // 设置cookie
+    .use(cookieParse(credentials.cookieSecret))
 
     // 路由
     .get('/', (req, res) => {
+        //cookies测试
+        // 获取cookies
+        if(Object.keys(req.cookies).length){   //通过判断对象key的数量
+            console.log(req.cookies.monster,req.cookies.signed_moster,req.signedCookies.signed_moster)
+        }
+
+        // 设置cookies
+        res.cookie('monster','nom nom');
+        res.cookie('signed_moster','nom nom',{signed:true}) //cookies验证加密
         res.render('home')
     })
 
