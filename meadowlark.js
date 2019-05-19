@@ -1,5 +1,9 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+// 这里使用了不同书上的文件处理，使用了express文档中的上传文件处理
+const multer = require('multer');
+// 加入dest，那么会存在硬盘上butter，如果不带参数，则在内存中，file对象会增加butter属性：http://www.expressjs.com.cn/en/resources/middleware/multer.html
+const upload = multer({dest:'uploads/'})
 
 const app = express();
 
@@ -117,6 +121,21 @@ app.set('port', process.env.PORT || 3000)
             currencies:['USD','GBP','BTC']
         }
         res.render('sendData',temp)
+    })
+
+    // 上传文件处理
+    .get('/contest/vacation-photo',(req,res)=>{
+        let now = new Date();
+        res.render('contest/vacation-photo',{
+            year:now.getFullYear(),
+            month:now.getMonth()+1
+        })
+    })
+
+    // 有一个疑问，为什么不直接在后台把年月写入，而是url
+    .post('/contest/vacation-photo/:year/:month',upload.single('photo'),(req,res)=>{
+        console.log(req.file,req.body)
+        res.redirect(303,'/');
     })
 
     .get('/no-layout', (req, res) => {
