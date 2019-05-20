@@ -4,6 +4,11 @@ const router = express.Router();
 
 // 中间件测试
 router.use((req,res,next)=>{
+    // 集群：查看在哪个cpu执行
+    const cluster = require('cluster');
+    if(cluster.isWorker){
+        console.log(`Worker ${cluster.worker.id}`)
+    }
     console.log('\n\n总是执行');
     next();
 })
