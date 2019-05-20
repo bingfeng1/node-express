@@ -3,13 +3,23 @@ const exphbs = require('express-handlebars');
 // 这里使用了不同书上的文件处理，使用了express文档中的上传文件处理
 const multer = require('multer');
 // 加入dest，那么会存在硬盘上butter，如果不带参数，则在内存中，file对象会增加butter属性：http://www.expressjs.com.cn/en/resources/middleware/multer.html
-const upload = multer({ dest: 'uploads/' })
+const upload = multer();
 // 设置cookies
 const credentials = require('./credentials');
 const cookieParse = require('cookie-parser');
+const session = require('express-session');
 
 // 自定义中间件测试
 const middlewareTest = require('./middleware');
+
+const fs = require('fs');
+const path = require('path');
+
+// 文件持久化
+let dataDir = path.resolve(__dirname, 'data');
+let vacationPhotoDir = path.resolve(dataDir, 'vacation-photo');
+fs.existsSync(dataDir) || fs.mkdirSync(vacationPhotoDir);
+fs.existsSync(vacationPhotoDir) || fs.mkdirSync(vacationPhotoDir)
 
 const app = express();
 
@@ -41,6 +51,7 @@ app.set('port', process.env.PORT || 3000)
     // .disable('x-powered-by')
     // 设置cookie
     .use(cookieParse(credentials.cookieSecret))
+    .use(session())
 
     //测试中间件
     .use('/', middlewareTest)
@@ -152,8 +163,25 @@ app.get('/sendData', (req, res) => {
         })
     })
 
+
     // 有一个疑问，为什么不直接在后台把年月写入，而是url
     .post('/contest/vacation-photo/:year/:month', upload.single('photo'), (req, res) => {
+        // 这里和书上的不同，使用了不一样的插件
+        let photo = req.file;
+        let dir = path.resolve(vacationPhotoDir, Date.now().toString());
+        // 这些同步事件，应该是需要改为异步的
+        fs.mkdirSync(dir);
+        fs.writeFileSync(path.resolve(dir, photo.originalname), photo.buffer);
+
+
+        // 测试session使用
+        req.session.flash = {
+            type: 'success',
+            intro: 'Good luck!',
+            message: 'You have been entred into the contest'
+        }
+
+
         console.log(req.file, req.body)
         res.redirect(303, '/');
     })
