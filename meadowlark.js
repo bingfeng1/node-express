@@ -8,6 +8,9 @@ const upload = multer({dest:'uploads/'})
 const credentials = require('./credentials');
 const cookieParse = require('cookie-parser');
 
+// 自定义中间件测试
+const middlewareTest = require('./middleware');
+
 const app = express();
 
 // 是否是生产模式
@@ -38,6 +41,9 @@ app.set('port', process.env.PORT || 3000)
     // .disable('x-powered-by')
     // 设置cookie
     .use(cookieParse(credentials.cookieSecret))
+
+    //测试中间件
+    .use('/',middlewareTest)
 
     // 路由
     .get('/', (req, res) => {
