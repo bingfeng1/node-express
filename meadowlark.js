@@ -9,6 +9,10 @@ const credentials = require('./credentials');
 const cookieParse = require('cookie-parser');
 const session = require('express-session');
 
+// 跨域解决
+const cors = require('cors');
+const http = require('http');
+
 // 自定义中间件测试
 const middlewareTest = require('./middleware');
 
@@ -52,6 +56,8 @@ app.set('port', process.env.PORT || 3000)
     // 设置cookie
     .use(cookieParse(credentials.cookieSecret))
     .use(session())
+    // 如果全局简单跨域
+    .use(cors())
 
     //测试中间件
     .use('/', middlewareTest)
@@ -208,7 +214,7 @@ app.get('/sendData', (req, res) => {
 
 //应用集群扩展
 function startServer() {
-    app.listen(app.get('port'), () => {
+    app.listen(app.get('port'),'0.0.0.0', () => {
         console.log(`Express started on http://localhost:${app.get('port')}; press Ctrl-C to terminate.环境是：${app.get('env')}`)
     })
 }
