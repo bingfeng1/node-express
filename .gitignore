@@ -89,4 +89,4 @@ typings/
 *.scss.map
 
 uploads
-data
+data/*
