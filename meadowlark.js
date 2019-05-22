@@ -57,7 +57,7 @@ app.set('port', process.env.PORT || 3000)
     .use(cookieParse(credentials.cookieSecret))
     .use(session())
     // 如果全局简单跨域
-    // .use(cors())
+    .use(cors())
 
     //测试中间件
     .use('/', middlewareTest)
